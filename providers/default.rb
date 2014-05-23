@@ -85,8 +85,14 @@ end
 
 action :remove do
   if_down = execute "if_down #{new_resource.name}" do
-    command "ifdown #{Chef::Recipe::NetworkInterfaces.value(:device, new_resource.device, new_resource, node)} -i /etc/network/interfaces.d/#{Chef::Recipe::NetworkInterfaces.value(:device, new_resource.device, new_resource, node)}"
-    only_if "ifdown -n #{Chef::Recipe::NetworkInterfaces.value(:device, new_resource.device, new_resource, node)} -i /etc/network/interfaces.d/#{Chef::Recipe::NetworkInterfaces.value(:device, new_resource.device, new_resource, node)}"
+    command 'ifdown ' \
+      "#{Chef::Recipe::NetworkInterfaces.value(:device, new_resource.device, new_resource, node)} " \
+      '-i /etc/network/interfaces.d/' \
+      "#{Chef::Recipe::NetworkInterfaces.value(:device, new_resource.device, new_resource, node)}"
+    only_if 'ifdown -n ' \
+      "#{Chef::Recipe::NetworkInterfaces.value(:device, new_resource.device, new_resource, node)} " \
+      '-i /etc/network/interfaces.d/' \
+      "#{Chef::Recipe::NetworkInterfaces.value(:device, new_resource.device, new_resource, node)}"
   end
 
   file "/etc/network/interfaces.d/#{new_resource.device}" do
